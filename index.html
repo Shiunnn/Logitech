@@ -1,0 +1,1726 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Logi Lab｜測出你的校園生存命定裝備</title>
+    <meta
+      name="description"
+      content="5 個校園日常情境，30 秒測出最適合你的 Logitech / Logitech G 命定裝備。"
+    />
+    <meta name="theme-color" content="#0F1115" />
+    <!-- Open Graph：部署後若 repo 名稱不同，記得改 og:url / og:image -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Logi Lab" />
+    <meta property="og:title" content="Logi Lab｜測出你的校園生存命定裝備" />
+    <meta
+      property="og:description"
+      content="期末趕報告 vs. 半夜打積分，你的桌面撐得住嗎？5 題測出你的 Logitech 命定神隊友。"
+    />
+    <meta property="og:url" content="https://shiunnn.github.io/Logitech/" />
+    <meta property="og:image" content="https://shiunnn.github.io/Logitech/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%2300B8FC'/%3E%3Cstop offset='1' stop-color='%2300F0B5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%230F1115'/%3E%3Cpolygon points='32,10 54,32 32,54 10,32' fill='none' stroke='url(%23g)' stroke-width='5'/%3E%3Ccircle cx='32' cy='32' r='6' fill='url(%23g)'/%3E%3C/svg%3E"
+    />
+    <style>
+      :root {
+        --bg: #0f1115;
+        --blue: #00b8fc;
+        --mint: #00f0b5;
+        --violet: #9b8cff;
+        --pink: #ff7eb6;
+        --text: #e8ecf2;
+        --muted: #9aa3b2;
+        --glass: rgba(255, 255, 255, 0.05);
+        --glass-2: rgba(255, 255, 255, 0.08);
+        --line: rgba(255, 255, 255, 0.1);
+        --grad: linear-gradient(90deg, var(--blue), var(--mint));
+        --font: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', system-ui, sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font);
+        -webkit-font-smoothing: antialiased;
+        -webkit-tap-highlight-color: transparent;
+      }
+      body {
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+      html {
+        overflow-x: hidden;
+        overflow-x: clip;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        cursor: pointer;
+      }
+
+      /* ---------- 背景：雙色光暈 + 網格 ---------- */
+      .glow {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 70vmax;
+        height: 70vmax;
+        margin: -35vmax 0 0 -35vmax;
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0.32;
+        will-change: transform;
+        z-index: 0;
+      }
+      .g1 {
+        background: radial-gradient(circle, var(--blue) 0%, rgba(0, 184, 252, 0) 60%);
+      }
+      .g2 {
+        background: radial-gradient(circle, var(--mint) 0%, rgba(0, 240, 181, 0) 60%);
+        opacity: 0.24;
+      }
+      .grid-bg {
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+        background-size: 44px 44px;
+        -webkit-mask-image: radial-gradient(ellipse at center, #000 20%, transparent 75%);
+        mask-image: radial-gradient(ellipse at center, #000 20%, transparent 75%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      main {
+        position: relative;
+        z-index: 1;
+        max-width: 760px;
+        margin: 0 auto;
+        padding: max(20px, env(safe-area-inset-top)) 18px max(28px, env(safe-area-inset-bottom));
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      .screen {
+        display: none;
+        flex: 1;
+        flex-direction: column;
+      }
+      .screen.active {
+        display: flex;
+        animation: screenIn 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      @keyframes screenIn {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      .glass {
+        background: var(--glass);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        -webkit-backdrop-filter: blur(16px);
+        backdrop-filter: blur(16px);
+      }
+      .grad-text {
+        background: var(--grad);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .kicker {
+        font-size: 12px;
+        letter-spacing: 0.32em;
+        color: var(--muted);
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
+      /* ---------- 按鈕 + 機械軸微震動 ---------- */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 1px solid var(--line);
+        background: var(--glass-2);
+        border-radius: 14px;
+        padding: 13px 18px;
+        font-weight: 700;
+        font-size: 15px;
+        transition:
+          background 0.2s,
+          border-color 0.2s,
+          transform 0.15s;
+      }
+      .btn:hover {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+      .btn.primary {
+        background: var(--grad);
+        color: #071016;
+        border: 0;
+        box-shadow: 0 8px 30px rgba(0, 200, 230, 0.25);
+      }
+      .btn.primary:hover {
+        filter: brightness(1.08);
+      }
+      .btn:focus-visible,
+      .opt:focus-visible,
+      .flip:focus-visible,
+      .tab:focus-visible {
+        outline: 2px solid var(--mint);
+        outline-offset: 2px;
+      }
+      .tap {
+        animation: keyTap 0.18s linear;
+      }
+      @keyframes keyTap {
+        0% {
+          transform: translate(0, 0) scale(1);
+        }
+        25% {
+          transform: translate(-1.5px, 1px) scale(0.97);
+        }
+        50% {
+          transform: translate(1.5px, -1px) scale(0.975);
+        }
+        75% {
+          transform: translate(-1px, 0) scale(0.99);
+        }
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+      }
+
+      /* ---------- 首頁 ---------- */
+      #home {
+        justify-content: center;
+        text-align: center;
+        gap: 22px;
+        padding: 24px 0;
+      }
+      #home h1 {
+        font-size: clamp(30px, 7vw, 50px);
+        line-height: 1.25;
+        font-weight: 900;
+        letter-spacing: 0.01em;
+      }
+      #home .sub {
+        color: var(--muted);
+        font-size: clamp(15px, 3.6vw, 18px);
+        line-height: 1.7;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+      }
+      .chip {
+        font-size: 13px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: var(--glass);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      #startBtn {
+        font-size: 18px;
+        padding: 16px 34px;
+        align-self: center;
+      }
+      .meta {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      /* ---------- 測驗 ---------- */
+      .quiz-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+      .back {
+        padding: 8px 12px;
+        font-size: 14px;
+        border-radius: 12px;
+      }
+      .progress {
+        flex: 1;
+        height: 8px;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+      }
+      .progress > i {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: var(--grad);
+        border-radius: 99px;
+        transition: width 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .qcount {
+        font-size: 14px;
+        color: var(--muted);
+        font-variant-numeric: tabular-nums;
+        min-width: 42px;
+        text-align: right;
+      }
+      .stats {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 12px 16px;
+        margin-bottom: 14px;
+      }
+      .stats svg {
+        width: 104px;
+        height: 104px;
+        flex: none;
+      }
+      .stats-title {
+        font-size: 12px;
+        color: var(--muted);
+        letter-spacing: 0.15em;
+        margin-bottom: 8px;
+      }
+      .legend {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 14px;
+        flex: 1;
+      }
+      .leg {
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .leg b {
+        margin-left: auto;
+        font-variant-numeric: tabular-nums;
+        font-size: 15px;
+        display: inline-block;
+      }
+      .bar {
+        grid-column: 1 / -1;
+      }
+      .bump {
+        animation: bump 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      @keyframes bump {
+        0% {
+          transform: scale(1);
+        }
+        40% {
+          transform: scale(1.5);
+          color: var(--mint);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      .qcard {
+        padding: 22px 18px;
+        transition:
+          opacity 0.22s,
+          transform 0.22s;
+      }
+      .qcard.out {
+        opacity: 0;
+        transform: translateX(-24px);
+      }
+      .qcard.pre {
+        opacity: 0;
+        transform: translateX(24px);
+        transition: none;
+      }
+      .qtag {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        padding: 4px 10px;
+        border-radius: 8px;
+        background: rgba(0, 184, 252, 0.15);
+        color: var(--blue);
+        margin-bottom: 10px;
+      }
+      .qtext {
+        font-size: clamp(18px, 4.6vw, 22px);
+        line-height: 1.5;
+        font-weight: 800;
+        margin-bottom: 18px;
+      }
+      .opts {
+        display: grid;
+        gap: 10px;
+      }
+      .opt {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        text-align: left;
+        padding: 14px;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        line-height: 1.6;
+        font-size: 15px;
+        transition:
+          background 0.2s,
+          border-color 0.2s;
+      }
+      .opt:hover {
+        background: rgba(255, 255, 255, 0.07);
+        border-color: rgba(0, 240, 181, 0.4);
+      }
+      .opt.sel {
+        border-color: var(--mint);
+        background: rgba(0, 240, 181, 0.1);
+      }
+      .opt .k {
+        flex: none;
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        font-size: 13px;
+        background: rgba(255, 255, 255, 0.08);
+      }
+      .opt.sel .k {
+        background: var(--grad);
+        color: #071016;
+      }
+      .hint {
+        margin-top: 12px;
+        font-size: 12px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      /* ---------- Loading ---------- */
+      #loading {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        gap: 22px;
+      }
+      .ring {
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        background: conic-gradient(var(--blue), var(--mint), transparent 75%);
+        -webkit-mask: radial-gradient(circle, transparent 54%, #000 56%);
+        mask: radial-gradient(circle, transparent 54%, #000 56%);
+        animation: spin 0.9s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      #loadText {
+        font-size: 18px;
+        font-weight: 800;
+      }
+      #loadSub {
+        font-size: 13px;
+        color: var(--muted);
+        min-height: 1.4em;
+        font-family: ui-monospace, Consolas, monospace;
+      }
+
+      /* ---------- 結果 ---------- */
+      #result {
+        gap: 16px;
+      }
+      .r-head {
+        text-align: center;
+        padding: 26px 18px 22px;
+      }
+      .r-title {
+        font-size: clamp(30px, 8vw, 44px);
+        font-weight: 900;
+        line-height: 1.2;
+        margin: 10px 0 8px;
+      }
+      .r-sub {
+        color: var(--muted);
+        font-size: 16px;
+      }
+      .brand-pill {
+        display: inline-block;
+        margin-top: 14px;
+        font-size: 13px;
+        font-weight: 800;
+        padding: 6px 14px;
+        border-radius: 999px;
+        border: 1px solid;
+      }
+      .brand-pill.g {
+        color: var(--blue);
+        border-color: rgba(0, 184, 252, 0.5);
+        background: rgba(0, 184, 252, 0.1);
+      }
+      .brand-pill.l {
+        color: var(--mint);
+        border-color: rgba(0, 240, 181, 0.5);
+        background: rgba(0, 240, 181, 0.1);
+      }
+      .r-radar {
+        display: flex;
+        justify-content: center;
+        margin-top: 14px;
+      }
+      .r-radar svg {
+        width: min(300px, 82vw);
+        height: auto;
+      }
+      .section {
+        padding: 18px;
+      }
+      .section h3 {
+        font-size: 15px;
+        font-weight: 800;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .section p {
+        line-height: 1.8;
+        font-size: 15px;
+        color: #cfd6e0;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+      }
+      .flip {
+        perspective: 1000px;
+        background: none;
+        border: 0;
+        text-align: left;
+        min-height: 220px;
+        border-radius: 18px;
+      }
+      .flip-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        min-height: 220px;
+        transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        transform-style: preserve-3d;
+      }
+      .flip.on .flip-inner {
+        transform: rotateY(180deg);
+      }
+      .face {
+        position: absolute;
+        inset: 0;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        border-radius: 18px;
+        padding: 16px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.05);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .face.back {
+        transform: rotateY(180deg);
+        background: linear-gradient(160deg, rgba(0, 184, 252, 0.16), rgba(0, 240, 181, 0.12));
+        border-color: rgba(0, 240, 181, 0.35);
+      }
+      .face .ico {
+        font-size: 30px;
+      }
+      .face .pn {
+        font-weight: 900;
+        font-size: 17px;
+        line-height: 1.3;
+      }
+      .face .pt {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .face .flip-hint {
+        margin-top: auto;
+        font-size: 12px;
+        color: var(--mint);
+      }
+      .face.back .bk-t {
+        font-size: 12px;
+        font-weight: 800;
+        color: var(--mint);
+        letter-spacing: 0.1em;
+      }
+      .face.back p {
+        font-size: 14px;
+        line-height: 1.7;
+        color: var(--text);
+      }
+      .budget {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+      }
+      .budget .ico {
+        font-size: 24px;
+      }
+      .budget b {
+        display: block;
+        margin-bottom: 4px;
+      }
+      .actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .actions .wide {
+        grid-column: 1 / -1;
+      }
+      .tabs {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      .tab {
+        padding: 12px 10px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.4;
+      }
+      .tab small {
+        display: block;
+        font-weight: 400;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .tab.on {
+        border-color: var(--mint);
+        background: rgba(0, 240, 181, 0.1);
+      }
+      .tab .mine {
+        display: block;
+        color: var(--mint);
+        font-size: 11px;
+      }
+      footer {
+        margin-top: 26px;
+        text-align: center;
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.8;
+      }
+      footer .small {
+        opacity: 0.7;
+        font-size: 11px;
+      }
+
+      /* ---------- Toast / Modal ---------- */
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: max(28px, env(safe-area-inset-bottom));
+        transform: translate(-50%, 20px);
+        opacity: 0;
+        pointer-events: none;
+        background: rgba(20, 24, 30, 0.95);
+        border: 1px solid rgba(0, 240, 181, 0.5);
+        color: var(--mint);
+        font-weight: 800;
+        padding: 12px 20px;
+        border-radius: 999px;
+        z-index: 50;
+        transition:
+          opacity 0.25s,
+          transform 0.25s;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+      .modal {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        background: rgba(5, 7, 10, 0.85);
+        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(8px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .modal.show {
+        display: flex;
+      }
+      .modal-box {
+        max-width: 420px;
+        width: 100%;
+        max-height: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;
+        overflow: auto;
+      }
+      .modal-box img {
+        width: 100%;
+        max-height: 62vh;
+        object-fit: contain;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+      }
+      .modal-box .note {
+        font-size: 13px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      @media (max-width: 420px) {
+        .stats {
+          gap: 12px;
+          padding: 10px 12px;
+        }
+        .stats svg {
+          width: 88px;
+          height: 88px;
+        }
+        .leg {
+          font-size: 12px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="glow g1" id="glow1"></div>
+    <div class="glow g2" id="glow2"></div>
+    <div class="grid-bg"></div>
+
+    <main>
+      <!-- ========== 首頁 ========== -->
+      <section class="screen active" id="home">
+        <div class="kicker">Logi Lab · Campus Survival Test</div>
+        <h1>
+          期末趕報告 <span class="grad-text">vs.</span> 半夜打積分<br />你的桌面<span
+            class="grad-text"
+            >撐得住嗎？</span
+          >
+        </h1>
+        <p class="sub">
+          花 30 秒回答 5 個校園日常，<br />找出最適合你的 Logitech 命定神隊友。
+        </p>
+        <div class="chips" id="homeChips"></div>
+        <button class="btn primary" id="startBtn">開始測驗 ➔</button>
+        <div class="meta">5 題 · 4 種結果 · 免登入</div>
+      </section>
+
+      <!-- ========== 測驗 ========== -->
+      <section class="screen" id="quiz">
+        <div class="quiz-top">
+          <button class="btn back" id="backBtn" aria-label="上一題">← 上一題</button>
+          <div class="progress" aria-hidden="true"><i id="progBar"></i></div>
+          <div class="qcount" id="qCount">1 / 5</div>
+        </div>
+
+        <div class="glass stats">
+          <svg id="miniRadar" aria-hidden="true"></svg>
+          <div style="flex: 1">
+            <div class="stats-title">裝備屬性雷達</div>
+            <div class="legend" id="legend"></div>
+          </div>
+        </div>
+
+        <div class="glass qcard" id="qCard">
+          <span class="qtag" id="qTag">Q1</span>
+          <h2 class="qtext" id="qText"></h2>
+          <div class="opts" id="qOpts"></div>
+        </div>
+        <div class="hint">電腦版可直接按鍵盤 A / B / C / D 作答</div>
+      </section>
+
+      <!-- ========== Loading ========== -->
+      <section class="screen" id="loading">
+        <div class="ring"></div>
+        <div id="loadText">正在為你配對羅技裝備庫...</div>
+        <div id="loadSub">&nbsp;</div>
+      </section>
+
+      <!-- ========== 結果 ========== -->
+      <section class="screen" id="result">
+        <div class="glass r-head">
+          <div class="kicker" id="rKicker">你的校園裝備處方箋</div>
+          <div class="r-title grad-text" id="rTitle"></div>
+          <div class="r-sub" id="rSub"></div>
+          <span class="brand-pill" id="rBrand"></span>
+          <div class="r-radar" id="rRadarWrap"><svg id="bigRadar" aria-hidden="true"></svg></div>
+        </div>
+
+        <div class="glass section">
+          <h3>💡 給你的白話文推薦理由</h3>
+          <p id="rReason"></p>
+        </div>
+
+        <div class="glass section">
+          <h3>🎯 命定裝備組合 <span class="meta" style="font-weight: 400">（點卡片翻面看白話文翻譯）</span></h3>
+          <div class="cards" id="rCards"></div>
+        </div>
+
+        <div class="glass section budget">
+          <span class="ico">🎓</span>
+          <div>
+            <b id="rBudgetName"></b>
+            <p id="rBudgetDesc"></p>
+          </div>
+        </div>
+
+        <div class="actions" id="rActions"></div>
+
+        <div class="glass section">
+          <h3>🔀 切換視角：瀏覽全部 4 種裝備組合</h3>
+          <div class="tabs" id="rTabs"></div>
+        </div>
+      </section>
+
+      <footer>
+        此互動網頁為 Logitech 第六屆校園大使申請創意企劃作品｜Made by 胡弼勛<br />
+        <span class="small"
+          >非 Logitech 官方網站。Logitech、Logitech G 及文中產品名稱為 Logitech
+          之商標，產品規格以官方公告為準。</span
+        >
+      </footer>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <div class="modal" id="storyModal" role="dialog" aria-modal="true" aria-label="限動分享圖">
+      <div class="glass modal-box">
+        <img id="storyImg" alt="Logi Lab 測驗結果限動圖" />
+        <div class="note">手機可直接「長按圖片」儲存，再上傳到 IG 限動 / Threads</div>
+        <div class="actions">
+          <button class="btn primary" id="storyShare">📤 分享圖片</button>
+          <a class="btn" id="storyDl" download="logi-lab.png">⬇️ 下載圖片</a>
+          <button class="btn wide" id="storyClose">關閉</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /* =========================================================
+         設定
+         ========================================================= */
+      // GoatCounter：到 https://www.goatcounter.com 免費註冊後，填入 'https://你的代號.goatcounter.com/count'
+      const ANALYTICS_ENDPOINT = ''
+
+      /* =========================================================
+         資料：屬性 / 題庫 / 結果
+         配分規則：每題 4 選項各對應 1 種屬性、皆 +2
+         → 每種屬性滿分 10，隨機作答時 4 種結果機率各 25%
+         同分規則：從 Q5 往回找，最後一個選到的同分屬性勝出
+         ========================================================= */
+      const PTS = 2
+      const MAX = 10
+      const AXES = ['speed', 'eff', 'quiet', 'look'] // 雷達：上、右、下、左
+      const ATTRS = {
+        speed: { name: '極致手速', color: '#00B8FC' },
+        eff: { name: '多工效率', color: '#00F0B5' },
+        quiet: { name: '靜音潛行', color: '#9B8CFF' },
+        look: { name: '桌面顏值', color: '#FF7EB6' },
+      }
+
+      const QUESTIONS = [
+        {
+          q: '期中週凌晨兩點，你的書桌現在長什麼樣子？',
+          o: [
+            ['螢幕開了十幾個分頁、Code 還沒跑通，旁邊放著喝一半的冰美式。', 'eff'],
+            ['剛打完一場逆轉勝，耳機還掛在脖子上，準備再開最後一把。', 'speed'],
+            ['怕吵到已經睡著的室友，連打字跟點滑鼠都小心翼翼。', 'quiet'],
+            ['桌面一定要收得乾乾淨淨，配色沒搭好會全身不對勁。', 'look'],
+          ],
+        },
+        {
+          q: '週末跟室友或朋友在 DC（Discord）開黑，你通常是哪種隊友？',
+          o: [
+            ['衝第一個開戰的輸出位，甩槍、走位講求零延遲，設備跟不上我會急。', 'speed'],
+            ['負責看地圖報位、查攻略的指揮官，常常要一邊切視窗一邊講話。', 'eff'],
+            ['邊打邊開實況的氣氛組，麥克風收音跟整體畫面風格不能妥協。', 'look'],
+            ['休閒派，偶爾玩個小品遊戲放鬆，握起來舒服、不吵到旁人最重要。', 'quiet'],
+          ],
+        },
+        {
+          q: '分組報告約在咖啡廳討論，從背包掏出設備的那一刻，你最在意什麼？',
+          o: [
+            ['一隻滑鼠切換筆電、iPad、手機三台裝置，簡報資料隨拿隨用。', 'eff'],
+            ['拿出配色可愛又有燈效的裝備，被隔壁組問「這哪裡買的？」', 'look'],
+            ['咖啡廳很安靜，最怕滑鼠「咔嗒咔嗒」太吵引來隔壁桌側目。', 'quiet'],
+            ['討論完順便約打一場，設備要輕、要快，隨時能上線。', 'speed'],
+          ],
+        },
+        {
+          q: '如果能幫現在的桌面升級一個黑科技功能，你會選哪一個？',
+          o: [
+            ['游標直接跨電腦拖曳，筆電的檔案無縫複製貼上到桌機（Logi Flow）。', 'eff'],
+            ['輕到像沒拿東西一樣的 60 克手感，連續激戰三小時手腕也不痠。', 'speed'],
+            ['鍵盤、滑鼠、耳機燈效一鍵同步，整個桌面跟著音樂律動（LIGHTSYNC RGB）。', 'look'],
+            ['手腕自然立起來握的垂直滑鼠，點擊聲小到像在圖書館翻書。', 'quiet'],
+          ],
+        },
+        {
+          q: '挑裝備時，哪一句話最容易讓你直接掏出錢包？',
+          o: [
+            ['「職業電競選手都在用，反應速度比別人快一步。」', 'speed'],
+            ['「寫程式、剪片效率直接翻倍，早點做完早點睡。」', 'eff'],
+            ['「長得超好看、配色超多，擺在桌上心情就好。」', 'look'],
+            ['「半夜趕工完全不吵人，人體工學握一整天也不累。」', 'quiet'],
+          ],
+        },
+      ]
+
+      const RESULTS = {
+        speed: {
+          title: '深夜積分主宰者',
+          sub: '反應比室友快 0.1 秒的電競狠角色',
+          line: 'g',
+          brand: 'Logitech G｜PRO 職業電競系列',
+          reason:
+            '你在乎的是「快」——快一步看到敵人、快一步開槍。PRO 系列是 Logitech G 給職業選手的裝備線：SUPERLIGHT 2 只有 60g，配上 PRO X 2 耳機聽清楚腳步方位，宿舍連打五場手也不會累。',
+          products: [
+            {
+              icon: '🖱️',
+              name: 'PRO X SUPERLIGHT 2',
+              tag: '60g 羽量級無線電競滑鼠',
+              back: 'HERO 2 感應器＋LIGHTSPEED 無線。翻成白話：甩槍時滑鼠跟你的手一樣快，而且沒有「線」在桌上拖後腿。',
+            },
+            {
+              icon: '🎧',
+              name: 'PRO X 2 LIGHTSPEED',
+              tag: '石墨烯單體無線電競耳機',
+              back: '石墨烯振膜讓腳步聲方位更清楚；LIGHTSPEED／藍牙／3.5mm 三種連線，打完遊戲直接接手機聽歌通勤。',
+            },
+          ],
+          budget: {
+            name: '學生平價版：G304 / G305 ＋ G435',
+            desc: '同樣是 LIGHTSPEED 無線與 HERO 感應器，G435 輕量耳機戴整晚也不壓頭，入門電競荷包友善。',
+          },
+        },
+        eff: {
+          title: '實驗室肝帝架構師',
+          sub: '寫 Code、做報告都在跟時間賽跑',
+          line: 'l',
+          brand: 'Logitech｜MX 高效生產力系列',
+          reason:
+            '你的時間永遠不夠用。MX 系列是 Logitech 的高效生產力線：MagSpeed 滾輪一秒刷完論文、Logi Flow 讓筆電和桌機像同一台電腦，一套鍵鼠同時管三台裝置，早點做完早點睡。',
+          products: [
+            {
+              icon: '🖱️',
+              name: 'MX Master 4',
+              tag: '觸覺回饋旗艦滑鼠',
+              back: 'MagSpeed 電磁滾輪一秒滑完 300 頁論文 PDF；拇指區會震動回饋，按一下叫出 Actions Ring 快捷選單，常用功能不用再找。',
+            },
+            {
+              icon: '⌨️',
+              name: 'MX Mechanical Mini',
+              tag: '低矮機械軸無線鍵盤',
+              back: 'Easy-Switch 三台裝置一鍵切換；搭配 Logi Flow，筆電寫 Code、桌機跑實驗，檔案直接跨電腦複製貼上。',
+            },
+          ],
+          budget: {
+            name: '學生平價版：MX Anywhere 3S',
+            desc: '口袋尺寸也有 MagSpeed 滾輪與 Logi Flow，玻璃桌面也能用，帶去實驗室、圖書館都不佔空間。',
+          },
+        },
+        look: {
+          title: '宿舍桌面造型師',
+          sub: '裝備不只要好用，還要是桌面穿搭的一部分',
+          line: 'g',
+          brand: 'Logitech G｜Aurora 系列',
+          reason:
+            '對你來說，裝備就是桌面穿搭。Aurora 是 Logitech G 以配色與舒適為核心的系列：小手友善的 G705、照顧小頭圍與眼鏡族的 G735，再加上附雲朵掌托的 G715，整套燈效同步，開實況也超上鏡。',
+          products: [
+            {
+              icon: '🖱️',
+              name: 'G705',
+              tag: '小手友善 RGB 無線滑鼠',
+              back: '比一般電競滑鼠更小巧，LIGHTSYNC 燈效＋藍牙／LIGHTSPEED 雙模：上課接筆電、回宿舍接桌機。',
+            },
+            {
+              icon: '🎧',
+              name: 'G735',
+              tag: '為小頭圍與眼鏡族設計的無線耳機',
+              back: '頭戴尺寸針對小頭圍調整、戴眼鏡也不夾；Blue VO!CE 麥克風讓開實況、DC 語音收音更乾淨。',
+            },
+            {
+              icon: '⌨️',
+              name: 'G715',
+              tag: 'TKL 無線機械鍵盤',
+              back: '附雲朵掌托的無線機械鍵盤，打字手感和桌面顏值一次滿足，燈效跟滑鼠耳機同步。',
+            },
+          ],
+          budget: {
+            name: '學生平價版：G705 ＋ G335',
+            desc: '先入手 G705 主力滑鼠，搭配輕量繽紛的 G335 有線耳機，同樣好看、預算更好控制。',
+          },
+        },
+        quiet: {
+          title: '圖書館幽靈夜貓族',
+          sub: '溫柔不打擾室友的深夜自習生',
+          line: 'l',
+          brand: 'Logitech｜人體工學系列',
+          reason:
+            '你是體貼室友的夜貓子，也是對自己手腕好的人。Lift 垂直滑鼠用 57° 握姿讓前臂放鬆、點擊安靜，搭配 Wave Keys 波浪鍵盤，凌晨三點在宿舍趕期末報告也不吵人、不痠痛。',
+          products: [
+            {
+              icon: '🖐️',
+              name: 'Lift 人體工學垂直滑鼠',
+              tag: '57° 垂直握姿・靜音點擊',
+              back: '專為中小型手掌設計，手腕像握手一樣自然立起來；按鍵點擊聲安靜，深夜宿舍也不吵醒室友。',
+            },
+            {
+              icon: '⌨️',
+              name: 'Wave Keys',
+              tag: '波浪型人體工學鍵盤',
+              back: '波浪鍵位＋軟墊掌托，手腕不用往外折；和 Lift 搭配就是整套人體工學，長時間寫報告不痠痛。',
+            },
+          ],
+          budget: {
+            name: '學生平價版：Signature M650 ＋ Pebble Keys 2 K380s',
+            desc: 'M650 的 SilentTouch 技術官方標示可減少約 90% 點擊噪音；K380s 輕薄安靜、可在三台裝置間切換。',
+          },
+        },
+      }
+
+      /* =========================================================
+         工具
+         ========================================================= */
+      const $ = (s) => document.querySelector(s)
+      const SCREENS = ['home', 'quiz', 'loading', 'result']
+      const SITE_URL = location.href.split('#')[0].split('?')[0]
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
+
+      function show(id) {
+        SCREENS.forEach((s) => $('#' + s).classList.toggle('active', s === id))
+        window.scrollTo(0, 0)
+      }
+      function tap(el) {
+        el.classList.remove('tap')
+        void el.offsetWidth
+        el.classList.add('tap')
+        if (navigator.vibrate) navigator.vibrate(8) // Android 有效，iOS 會靜默忽略
+      }
+      let toastTimer
+      function toast(msg) {
+        const t = $('#toast')
+        t.textContent = msg
+        t.classList.add('show')
+        clearTimeout(toastTimer)
+        toastTimer = setTimeout(() => t.classList.remove('show'), 1800)
+      }
+      function track(name) {
+        if (window.goatcounter && window.goatcounter.count) {
+          window.goatcounter.count({ path: name, title: name, event: true })
+        }
+      }
+      if (ANALYTICS_ENDPOINT) {
+        const s = document.createElement('script')
+        s.async = true
+        s.src = 'https://gc.zgo.at/count.js'
+        s.dataset.goatcounter = ANALYTICS_ENDPOINT
+        document.head.appendChild(s)
+      }
+
+      function calcScores(answers) {
+        const s = { speed: 0, eff: 0, quiet: 0, look: 0 }
+        answers.forEach((a) => (s[a] += PTS))
+        return s
+      }
+      function pickResult(answers) {
+        const s = calcScores(answers)
+        const top = Math.max(...AXES.map((k) => s[k]))
+        const tied = AXES.filter((k) => s[k] === top)
+        if (tied.length === 1) return tied[0]
+        for (let i = answers.length - 1; i >= 0; i--) {
+          if (tied.includes(answers[i])) return answers[i]
+        }
+        return tied[0]
+      }
+
+      /* =========================================================
+         背景光暈：桌機跟游標，手機自動漂移＋觸控吸附
+         ========================================================= */
+      ;(() => {
+        const g1 = $('#glow1')
+        const g2 = $('#glow2')
+        const fine = matchMedia('(hover: hover) and (pointer: fine)').matches
+        let tx = innerWidth * 0.3
+        let ty = innerHeight * 0.3
+        let x1 = tx,
+          y1 = ty,
+          x2 = innerWidth * 0.7,
+          y2 = innerHeight * 0.7
+        let lastMove = -1e9
+        const onMove = (x, y) => {
+          tx = x
+          ty = y
+          lastMove = performance.now()
+        }
+        addEventListener('pointermove', (e) => onMove(e.clientX, e.clientY), { passive: true })
+        addEventListener('touchstart', (e) => onMove(e.touches[0].clientX, e.touches[0].clientY), {
+          passive: true,
+        })
+        function frame(t) {
+          const idle = !fine || t - lastMove > 2500
+          if (idle) {
+            const w = innerWidth
+            const h = innerHeight
+            tx = w * (0.5 + 0.32 * Math.sin(t / 3200))
+            ty = h * (0.42 + 0.22 * Math.cos(t / 4100))
+          }
+          x1 += (tx - x1) * 0.08
+          y1 += (ty - y1) * 0.08
+          const mx = innerWidth - tx
+          const my = innerHeight - ty
+          x2 += (mx - x2) * 0.04
+          y2 += (my - y2) * 0.04
+          g1.style.transform = `translate3d(${x1}px,${y1}px,0)`
+          g2.style.transform = `translate3d(${x2}px,${y2}px,0)`
+          requestAnimationFrame(frame)
+        }
+        if (reduceMotion) {
+          g1.style.transform = `translate3d(${innerWidth * 0.25}px,${innerHeight * 0.25}px,0)`
+          g2.style.transform = `translate3d(${innerWidth * 0.75}px,${innerHeight * 0.75}px,0)`
+        } else requestAnimationFrame(frame)
+      })()
+
+      /* =========================================================
+         SVG 雷達圖
+         ========================================================= */
+      let radarId = 0
+      function createRadar(svg, { size = 300, labels = true } = {}) {
+        const id = 'rg' + radarId++
+        const c = size / 2
+        const r = size / 2 - (labels ? 62 : 8)
+        const ang = (i) => ((-90 + i * 90) * Math.PI) / 180
+        const pt = (i, v) => [c + Math.cos(ang(i)) * r * v, c + Math.sin(ang(i)) * r * v]
+        const poly = (v) =>
+          AXES.map((_, i) =>
+            pt(i, Array.isArray(v) ? v[i] : v)
+              .map((n) => n.toFixed(1))
+              .join(','),
+          ).join(' ')
+        svg.setAttribute('viewBox', `0 0 ${size} ${size}`)
+        let html = `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00B8FC"/><stop offset="1" stop-color="#00F0B5"/></linearGradient></defs>`
+        ;[0.25, 0.5, 0.75, 1].forEach((k) => {
+          html += `<polygon points="${poly(k)}" fill="none" stroke="rgba(255,255,255,${k === 1 ? 0.2 : 0.08})" stroke-width="1"/>`
+        })
+        AXES.forEach((_, i) => {
+          const [x, y] = pt(i, 1)
+          html += `<line x1="${c}" y1="${c}" x2="${x}" y2="${y}" stroke="rgba(255,255,255,.08)"/>`
+        })
+        html += `<polygon class="rd" fill="url(#${id})" fill-opacity=".3" stroke="url(#${id})" stroke-width="${labels ? 2.5 : 2}" stroke-linejoin="round"/>`
+        AXES.forEach((k) => {
+          html += `<circle class="rdot" r="${labels ? 4 : 2.5}" fill="${ATTRS[k].color}"/>`
+        })
+        if (labels) {
+          AXES.forEach((k, i) => {
+            const [x, y] = pt(i, 1)
+            const off = [
+              [0, -26],
+              [34, -6],
+              [0, 22],
+              [-34, -6],
+            ][i]
+            html += `<text x="${x + off[0]}" y="${y + off[1]}" text-anchor="middle" font-size="13" font-weight="700" fill="${ATTRS[k].color}">${ATTRS[k].name}</text>`
+            html += `<text class="rval" x="${x + off[0]}" y="${y + off[1] + 17}" text-anchor="middle" font-size="13" fill="#E8ECF2">0</text>`
+          })
+        }
+        svg.innerHTML = html
+        const shape = svg.querySelector('.rd')
+        const dots = svg.querySelectorAll('.rdot')
+        const vals = svg.querySelectorAll('.rval')
+        let cur = [0, 0, 0, 0]
+        let target = [0, 0, 0, 0]
+        let raf
+        function draw() {
+          const v = cur.map((n) => Math.max(0.05, n))
+          shape.setAttribute('points', poly(v))
+          dots.forEach((d, i) => {
+            const [x, y] = pt(i, v[i])
+            d.setAttribute('cx', x)
+            d.setAttribute('cy', y)
+          })
+        }
+        function tick() {
+          let done = true
+          cur = cur.map((n, i) => {
+            const d = target[i] - n
+            if (Math.abs(d) > 0.002) {
+              done = false
+              return n + d * 0.16
+            }
+            return target[i]
+          })
+          draw()
+          if (!done) raf = requestAnimationFrame(tick)
+        }
+        draw()
+        return {
+          set(scores, instant = false) {
+            target = AXES.map((k) => Math.min(1, scores[k] / MAX))
+            vals.forEach((t, i) => (t.textContent = scores[AXES[i]]))
+            cancelAnimationFrame(raf)
+            if (instant || reduceMotion) {
+              cur = target.slice()
+              draw()
+            } else raf = requestAnimationFrame(tick)
+          },
+        }
+      }
+
+      /* =========================================================
+         首頁
+         ========================================================= */
+      $('#homeChips').innerHTML = AXES.map(
+        (k) => `<span class="chip"><i class="dot" style="background:${ATTRS[k].color}"></i>${ATTRS[k].name}</span>`,
+      ).join('')
+
+      /* =========================================================
+         測驗流程
+         ========================================================= */
+      const state = { answers: [], cur: 0, lock: false, mine: null, myScores: null, viewing: null }
+      const mini = createRadar($('#miniRadar'), { size: 120, labels: false })
+      const big = createRadar($('#bigRadar'), { size: 300, labels: true })
+
+      $('#legend').innerHTML = AXES.map(
+        (k) =>
+          `<div class="leg"><i class="dot" style="background:${ATTRS[k].color}"></i>${ATTRS[k].name}<b id="lv-${k}">0</b></div>`,
+      ).join('')
+
+      function updateStats(changed) {
+        const s = calcScores(state.answers)
+        mini.set(s)
+        AXES.forEach((k) => {
+          const el = $('#lv-' + k)
+          el.textContent = s[k]
+          if (k === changed) {
+            el.classList.remove('bump')
+            void el.offsetWidth
+            el.classList.add('bump')
+          }
+        })
+      }
+
+      function renderQuestion(prevChoice) {
+        const Q = QUESTIONS[state.cur]
+        $('#qTag').textContent = 'Q' + (state.cur + 1)
+        $('#qText').textContent = Q.q
+        $('#qCount').textContent = `${state.cur + 1} / ${QUESTIONS.length}`
+        $('#progBar').style.width = (state.cur / QUESTIONS.length) * 100 + '%'
+        $('#backBtn').textContent = state.cur === 0 ? '← 首頁' : '← 上一題'
+        $('#qOpts').innerHTML = Q.o
+          .map(
+            ([t, a], i) =>
+              `<button class="opt${prevChoice === i ? ' sel' : ''}" data-i="${i}"><span class="k">${'ABCD'[i]}</span><span>${t}</span></button>`,
+          )
+          .join('')
+      }
+
+      function slideTo(fn) {
+        const card = $('#qCard')
+        if (reduceMotion) return fn()
+        card.classList.add('out')
+        setTimeout(() => {
+          fn()
+          card.classList.remove('out')
+          card.classList.add('pre')
+          void card.offsetWidth
+          card.classList.remove('pre')
+        }, 220)
+      }
+
+      function choose(i) {
+        if (state.lock) return
+        state.lock = true
+        const btn = $('#qOpts').children[i]
+        ;[...$('#qOpts').children].forEach((b) => b.classList.remove('sel'))
+        btn.classList.add('sel')
+        tap(btn)
+        const attr = QUESTIONS[state.cur].o[i][1]
+        state.answers[state.cur] = attr
+        state.answers.length = state.cur + 1
+        updateStats(attr)
+        setTimeout(() => {
+          if (state.cur === QUESTIONS.length - 1) {
+            $('#progBar').style.width = '100%'
+            state.lock = false
+            finish()
+            return
+          }
+          slideTo(() => {
+            state.cur++
+            renderQuestion()
+            state.lock = false
+          })
+        }, 280)
+      }
+
+      $('#qOpts').addEventListener('click', (e) => {
+        const b = e.target.closest('.opt')
+        if (b) choose(+b.dataset.i)
+      })
+      addEventListener('keydown', (e) => {
+        if (!$('#quiz').classList.contains('active')) return
+        const i = 'abcd'.indexOf(e.key.toLowerCase())
+        const n = '1234'.indexOf(e.key)
+        if (i >= 0 || n >= 0) choose(i >= 0 ? i : n)
+        if (e.key === 'Backspace') $('#backBtn').click()
+      })
+
+      $('#backBtn').addEventListener('click', (e) => {
+        tap(e.currentTarget)
+        if (state.lock) return
+        if (state.cur === 0) {
+          show('home')
+          return
+        }
+        slideTo(() => {
+          state.cur--
+          const prevAttr = state.answers[state.cur]
+          const prevIdx = QUESTIONS[state.cur].o.findIndex((o) => o[1] === prevAttr)
+          state.answers.length = state.cur
+          updateStats()
+          renderQuestion(prevIdx)
+        })
+      })
+
+      function startQuiz() {
+        state.answers = []
+        state.cur = 0
+        state.lock = false
+        mini.set(calcScores([]), true)
+        updateStats()
+        renderQuestion()
+        history.replaceState(null, '', SITE_URL)
+        show('quiz')
+        track('start')
+      }
+      $('#startBtn').addEventListener('click', (e) => {
+        tap(e.currentTarget)
+        setTimeout(startQuiz, 120)
+      })
+
+      function finish() {
+        show('loading')
+        const lines = ['> 掃描 HERO 2 感應器…', '> 校準 MagSpeed 電磁滾輪…', '> 同步 LIGHTSYNC 燈效…', '> 生成裝備處方箋…']
+        let i = 0
+        $('#loadSub').textContent = lines[0]
+        const iv = setInterval(() => ($('#loadSub').textContent = lines[++i % lines.length]), 375)
+        setTimeout(() => {
+          clearInterval(iv)
+          state.mine = pickResult(state.answers)
+          state.myScores = calcScores(state.answers)
+          track('complete')
+          track('result-' + state.mine)
+          renderResult(state.mine)
+          show('result')
+        }, 1500)
+      }
+
+      /* =========================================================
+         結果頁
+         ========================================================= */
+      function renderResult(key) {
+        state.viewing = key
+        const R = RESULTS[key]
+        const isMine = state.mine === key
+        const friend = !state.mine
+        $('#rKicker').textContent = isMine
+          ? '你的校園裝備處方箋'
+          : friend
+            ? '朋友測出了這個結果，換你了？'
+            : '切換視角：其他裝備組合'
+        $('#rTitle').textContent = `【${R.title}】`
+        $('#rSub').textContent = R.sub
+        const pill = $('#rBrand')
+        pill.textContent = R.brand
+        pill.className = 'brand-pill ' + R.line
+        $('#rRadarWrap').style.display = isMine ? '' : 'none'
+        if (isMine) {
+          big.set({ speed: 0, eff: 0, quiet: 0, look: 0 }, true)
+          setTimeout(() => big.set(state.myScores), 120)
+        }
+        $('#rReason').textContent = R.reason
+        $('#rCards').innerHTML = R.products
+          .map(
+            (p) => `<button class="flip" aria-pressed="false" aria-label="${p.name}，點擊翻面">
+              <div class="flip-inner">
+                <div class="face front"><span class="ico">${p.icon}</span><span class="pn">${p.name}</span><span class="pt">${p.tag}</span><span class="flip-hint">點我翻面看白話文 ↻</span></div>
+                <div class="face back"><span class="bk-t">白話文翻譯</span><p>${p.back}</p></div>
+              </div></button>`,
+          )
+          .join('')
+        $('#rBudgetName').textContent = R.budget.name
+        $('#rBudgetDesc').textContent = R.budget.desc
+
+        const acts = $('#rActions')
+        if (state.mine) {
+          acts.innerHTML = `
+            <button class="btn primary wide" data-act="story">🖼️ 產生 IG 限動戰果圖</button>
+            <button class="btn" data-act="copy">📋 複製裝備診斷書</button>
+            ${navigator.share ? '<button class="btn" data-act="share">📤 分享給朋友</button>' : '<button class="btn" data-act="link">🔗 複製測驗連結</button>'}
+            ${isMine ? '' : '<button class="btn" data-act="mine">↩ 回到我的結果</button>'}
+            <button class="btn ${isMine ? 'wide' : ''}" data-act="restart">↻ 重新測驗</button>`
+        } else {
+          acts.innerHTML = `<button class="btn primary wide" data-act="restart">我也要測 ➔</button>`
+        }
+
+        $('#rTabs').innerHTML = AXES.map((k) => {
+          const r = RESULTS[k]
+          return `<button class="tab${k === key ? ' on' : ''}" data-k="${k}">${r.title}${k === state.mine ? ' <span class="mine">● 你的結果</span>' : ''}<small>${r.brand.split('｜')[1]}</small></button>`
+        }).join('')
+      }
+
+      $('#rCards').addEventListener('click', (e) => {
+        const f = e.target.closest('.flip')
+        if (!f) return
+        f.classList.toggle('on')
+        f.setAttribute('aria-pressed', f.classList.contains('on'))
+        track('flip')
+      })
+      $('#rTabs').addEventListener('click', (e) => {
+        const t = e.target.closest('.tab')
+        if (!t) return
+        tap(t)
+        renderResult(t.dataset.k)
+        $('#result').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' })
+        track('browse-' + t.dataset.k)
+      })
+      $('#rActions').addEventListener('click', async (e) => {
+        const b = e.target.closest('[data-act]')
+        if (!b) return
+        tap(b)
+        const act = b.dataset.act
+        if (act === 'restart') startQuiz()
+        if (act === 'mine') renderResult(state.mine)
+        if (act === 'copy') {
+          if (await copyText(diagnosisText())) toast('已複製！貼到 IG / Threads 分享吧')
+          track('copy')
+        }
+        if (act === 'link') {
+          if (await copyText(shareUrl())) toast('已複製測驗連結！')
+        }
+        if (act === 'share') {
+          const R = RESULTS[state.mine]
+          try {
+            await navigator.share({
+              title: 'Logi Lab｜測出你的校園生存命定裝備',
+              text: `我測出【${R.title}】！你是哪一型？`,
+              url: shareUrl(),
+            })
+            track('share')
+          } catch (err) {
+            if (err.name !== 'AbortError' && (await copyText(diagnosisText()))) toast('已複製！')
+          }
+        }
+        if (act === 'story') openStory()
+      })
+
+      function shareUrl() {
+        return SITE_URL + '#r=' + state.mine
+      }
+      function diagnosisText() {
+        const R = RESULTS[state.mine]
+        const s = state.myScores
+        return [
+          '【Logi Lab 校園裝備診斷書】',
+          `我是：${R.title}｜${R.sub}`,
+          `屬性：${AXES.map((k) => `${ATTRS[k].name} ${s[k]}`).join('／')}`,
+          `命定裝備：${R.products.map((p) => p.name).join(' ＋ ')}`,
+          R.budget.name,
+          `你是哪一型？👉 ${shareUrl()}`,
+          '#LogiLab #Logitech #羅技',
+        ].join('\n')
+      }
+      async function copyText(text) {
+        try {
+          await navigator.clipboard.writeText(text)
+          return true
+        } catch (_) {
+          // IG / FB 內建瀏覽器常擋 Clipboard API → 退回 execCommand
+          const ta = document.createElement('textarea')
+          ta.value = text
+          ta.setAttribute('readonly', '')
+          ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;'
+          document.body.appendChild(ta)
+          ta.select()
+          ta.setSelectionRange(0, text.length)
+          let ok = false
+          try {
+            ok = document.execCommand('copy')
+          } catch (_) {}
+          ta.remove()
+          if (!ok) window.prompt('長按複製以下文字：', text)
+          return ok
+        }
+      }
+
+      /* =========================================================
+         IG 限動圖（Canvas 1080×1920，不依賴外部圖片，無 CORS 問題）
+         ========================================================= */
+      const FONT = '"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif'
+      function rr(x, c, y, w, h, r) {
+        x.beginPath()
+        x.moveTo(c + r, y)
+        x.arcTo(c + w, y, c + w, y + h, r)
+        x.arcTo(c + w, y + h, c, y + h, r)
+        x.arcTo(c, y + h, c, y, r)
+        x.arcTo(c, y, c + w, y, r)
+        x.closePath()
+      }
+      function wrap(x, text, maxW) {
+        const lines = []
+        let line = ''
+        for (const ch of text) {
+          if (x.measureText(line + ch).width > maxW && line) {
+            lines.push(line)
+            line = ch
+          } else line += ch
+        }
+        if (line) lines.push(line)
+        return lines
+      }
+      function drawStory() {
+        const R = RESULTS[state.mine]
+        const s = state.myScores
+        const W = 1080
+        const H = 1920
+        const cv = document.createElement('canvas')
+        cv.width = W
+        cv.height = H
+        const x = cv.getContext('2d')
+        const grad = (x0, x1) => {
+          const g = x.createLinearGradient(x0, 0, x1, 0)
+          g.addColorStop(0, '#00B8FC')
+          g.addColorStop(1, '#00F0B5')
+          return g
+        }
+        const glow = (cx, cy, r, rgb, a) => {
+          const g = x.createRadialGradient(cx, cy, 0, cx, cy, r)
+          g.addColorStop(0, `rgba(${rgb},${a})`)
+          g.addColorStop(1, `rgba(${rgb},0)`)
+          x.fillStyle = g
+          x.fillRect(0, 0, W, H)
+        }
+        x.fillStyle = '#0F1115'
+        x.fillRect(0, 0, W, H)
+        glow(160, 260, 760, '0,184,252', 0.38)
+        glow(940, 1640, 820, '0,240,181', 0.3)
+        x.strokeStyle = 'rgba(255,255,255,0.035)'
+        x.lineWidth = 1
+        for (let i = 0; i <= W; i += 60) {
+          x.beginPath()
+          x.moveTo(i, 0)
+          x.lineTo(i, H)
+          x.stroke()
+        }
+        for (let j = 0; j <= H; j += 60) {
+          x.beginPath()
+          x.moveTo(0, j)
+          x.lineTo(W, j)
+          x.stroke()
+        }
+
+        x.textAlign = 'center'
+        x.textBaseline = 'alphabetic'
+        x.fillStyle = 'rgba(232,236,242,0.6)'
+        x.font = `700 32px ${FONT}`
+        x.fillText('L O G I   L A B', W / 2, 190)
+        x.font = `500 40px ${FONT}`
+        x.fillStyle = '#9AA3B2'
+        x.fillText('我的校園裝備處方箋', W / 2, 262)
+
+        x.font = `900 108px ${FONT}`
+        const tw = x.measureText(R.title).width
+        x.fillStyle = grad(W / 2 - tw / 2, W / 2 + tw / 2)
+        x.fillText(R.title, W / 2, 410)
+
+        x.font = `500 40px ${FONT}`
+        x.fillStyle = '#E8ECF2'
+        wrap(x, R.sub, 900).forEach((l, i) => x.fillText(l, W / 2, 490 + i * 54))
+
+        x.font = `800 32px ${FONT}`
+        const bw = x.measureText(R.brand).width + 64
+        const isG = R.line === 'g'
+        rr(x, W / 2 - bw / 2, 560, bw, 66, 33)
+        x.fillStyle = isG ? 'rgba(0,184,252,0.14)' : 'rgba(0,240,181,0.14)'
+        x.fill()
+        x.strokeStyle = isG ? '#00B8FC' : '#00F0B5'
+        x.lineWidth = 2
+        x.stroke()
+        x.fillStyle = isG ? '#00B8FC' : '#00F0B5'
+        x.fillText(R.brand, W / 2, 604)
+
+        // 雷達
+        const cx = W / 2
+        const cy = 1000
+        const r = 250
+        const ang = (i) => ((-90 + i * 90) * Math.PI) / 180
+        const P = (i, v) => [cx + Math.cos(ang(i)) * r * v, cy + Math.sin(ang(i)) * r * v]
+        ;[0.25, 0.5, 0.75, 1].forEach((k) => {
+          x.beginPath()
+          AXES.forEach((_, i) => x[i ? 'lineTo' : 'moveTo'](...P(i, k)))
+          x.closePath()
+          x.strokeStyle = `rgba(255,255,255,${k === 1 ? 0.22 : 0.09})`
+          x.lineWidth = 2
+          x.stroke()
+        })
+        x.beginPath()
+        AXES.forEach((k, i) => x[i ? 'lineTo' : 'moveTo'](...P(i, Math.max(0.05, s[k] / MAX))))
+        x.closePath()
+        x.fillStyle = 'rgba(0,212,220,0.28)'
+        x.fill()
+        x.strokeStyle = grad(cx - r, cx + r)
+        x.lineWidth = 6
+        x.lineJoin = 'round'
+        x.stroke()
+        AXES.forEach((k, i) => {
+          const [px, py] = P(i, Math.max(0.05, s[k] / MAX))
+          x.beginPath()
+          x.arc(px, py, 11, 0, Math.PI * 2)
+          x.fillStyle = ATTRS[k].color
+          x.fill()
+          const [lx, ly] = P(i, 1)
+          const off = [
+            [0, -70],
+            [0, 90],
+            [0, 80],
+            [0, 90],
+          ][i]
+          const ox = i === 1 ? -20 : i === 3 ? 20 : 0
+          x.font = `800 38px ${FONT}`
+          x.fillStyle = ATTRS[k].color
+          x.fillText(ATTRS[k].name, lx + ox, ly + off[1])
+          x.font = `700 34px ${FONT}`
+          x.fillStyle = '#E8ECF2'
+          x.fillText(`${s[k]} / ${MAX}`, lx + ox, ly + off[1] + 46)
+        })
+
+        // 裝備卡
+        const by = 1410
+        const items = R.products.map((p) => p.name)
+        const bh = 110 + items.length * 60
+        rr(x, 80, by, W - 160, bh, 36)
+        x.fillStyle = 'rgba(255,255,255,0.06)'
+        x.fill()
+        x.strokeStyle = 'rgba(255,255,255,0.14)'
+        x.lineWidth = 2
+        x.stroke()
+        x.font = `800 34px ${FONT}`
+        x.fillStyle = '#00F0B5'
+        x.fillText('🎯 命定裝備組合', W / 2, by + 66)
+        x.font = `700 44px ${FONT}`
+        x.fillStyle = '#E8ECF2'
+        items.forEach((n, i) => x.fillText(n, W / 2, by + 132 + i * 60))
+
+        x.font = `700 40px ${FONT}`
+        x.fillStyle = '#E8ECF2'
+        x.fillText('你是哪一型？來測測看 👇', W / 2, 1765)
+        const host = SITE_URL.replace(/^https?:\/\//, '').replace(/\/$/, '')
+        let hs = 40
+        x.font = `800 ${hs}px ${FONT}`
+        while (x.measureText(host).width > 940 && hs > 22) x.font = `800 ${--hs}px ${FONT}`
+        const hw = x.measureText(host).width
+        x.fillStyle = grad(W / 2 - hw / 2, W / 2 + hw / 2)
+        x.fillText(host, W / 2, 1825)
+        x.font = `500 28px ${FONT}`
+        x.fillStyle = 'rgba(232,236,242,0.45)'
+        x.fillText('#LogiLab  ·  非官方校園大使企劃作品', W / 2, 1880)
+        return cv
+      }
+
+      let storyBlob = null
+      function openStory() {
+        const cv = drawStory()
+        const url = cv.toDataURL('image/png')
+        $('#storyImg').src = url
+        $('#storyDl').href = url
+        $('#storyDl').download = `logi-lab-${state.mine}.png`
+        storyBlob = null
+        cv.toBlob((b) => (storyBlob = b), 'image/png')
+        $('#storyShare').style.display = navigator.canShare ? '' : 'none'
+        $('#storyModal').classList.add('show')
+        track('story')
+      }
+      $('#storyClose').addEventListener('click', () => $('#storyModal').classList.remove('show'))
+      $('#storyModal').addEventListener('click', (e) => {
+        if (e.target.id === 'storyModal') $('#storyModal').classList.remove('show')
+      })
+      $('#storyShare').addEventListener('click', async () => {
+        if (!storyBlob) return
+        const file = new File([storyBlob], `logi-lab-${state.mine}.png`, { type: 'image/png' })
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({ files: [file], title: 'Logi Lab 戰果', text: shareUrl() })
+            track('story-share')
+          } catch (_) {}
+        } else toast('此瀏覽器不支援分享圖片，請長按圖片儲存')
+      })
+
+      /* =========================================================
+         朋友分享連結：#r=speed 直接看該結果
+         ========================================================= */
+      const m = location.hash.match(/r=(speed|eff|quiet|look)/)
+      if (m) {
+        renderResult(m[1])
+        show('result')
+        track('from-share-' + m[1])
+      }
+    </script>
+  </body>
+</html>
