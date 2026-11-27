@@ -1,45 +1,48 @@
 # Logi Lab：測出你的校園生存命定裝備
 
-Logitech 第六屆校園大使申請｜加分題互動網頁。單一 `index.html`，零依賴（不使用 CDN），可直接部署到 GitHub Pages。
+> Logitech 第六屆校園大使申請｜加分題互動式情境測驗網頁  
+> 🔗 **線上體驗**：https://shiunnn.github.io/Logitech/
 
-## 檔案
+---
 
-| 檔案 | 用途 |
-|---|---|
-| `index.html` | 整個網站（HTML + CSS + JS） |
-| `og.png` | 1200×630 社群預覽圖（Threads / LINE / FB 貼連結時顯示） |
-| `企劃書_修訂版.md` | 修訂後的企劃書 |
+## 專案簡介
 
-## 部署（GitHub Pages）
+許多大學生對羅技的印象停留在「文書滑鼠」或「電競品牌」，不清楚 **Logitech（高效生產力／人體工學）** 與 **Logitech G（專業電競／風格創作）** 各自對應的使用場景。
 
-```bash
-git init
-git add index.html og.png README.md
-git commit -m "Logi Lab v1"
-git branch -M main
-git remote add origin https://github.com/Shiunnn/Logitech.git
-git push -u origin main
-```
+《Logi Lab》將硬核規格表轉化為 5 個大學生最常遇到的校園生存情境題，透過即時四軸雷達與白話文產品翻譯，讓使用者在 30 秒內認識兩條品牌線的差異，並取得專屬的「校園裝備處方箋」。
 
-接著到 repo 的 **Settings → Pages → Branch: main / (root)**，網址會是 `https://shiunnn.github.io/Logitech/`。
+---
 
-> repo 名稱如果不是 `Logitech`，記得改 `index.html` 裡的 `og:url`、`og:image`。
+## 主要功能
 
-## 數據追蹤（建議開）
+- **即時四軸屬性雷達**：作答時同步繪製「極致手速、多工效率、靜音潛行、桌面顏值」SVG 雷達圖。
+- **2 : 2 品牌線對應**：4 種測驗結果分別對應 Logitech G（PRO／Aurora）與 Logitech（MX／人體工學），並皆提供**學生平價版**推薦。
+- **白話文翻轉小卡**：點擊結果頁每張產品卡片可翻面查看白話功能翻譯（例如觸覺回饋 Actions Ring、57° 垂直握姿、石墨烯單體等）。
+- **社群擴散設計**：一鍵生成 1080×1920 IG 限動戰果圖、複製裝備診斷書、支援結果深連結（`#r=`）與跨平台分享。
+- **切換視角分頁**：結果頁可直接切換瀏覽全部 4 種裝備組合，無須重複作答。
 
-1. 到 https://www.goatcounter.com 免費註冊（例如代號 `logilab`）
-2. 修改 `index.html` 的 `const ANALYTICS_ENDPOINT = 'https://logilab.goatcounter.com/count'`
+---
 
-會記錄的事件：`start`、`complete`、`result-{speed|eff|quiet|look}`、`copy`、`share`、`story`、`flip`、`browse-*`、`from-share-*`。送出表單時可以附上完成數和結果分布。
+## 四大測驗結果
 
-## 計分規則
+| 屬性 | 稱號 | 品牌線 | 主力推薦組合 | 學生平價版 |
+|---|---|---|---|---|
+| 極致手速 | 深夜積分主宰者 | Logitech G｜PRO 系列 | PRO X SUPERLIGHT 2 ＋ PRO X 2 LIGHTSPEED | G304／G305 ＋ G435 |
+| 桌面顏值 | 宿舍桌面造型師 | Logitech G｜Aurora 系列 | G705 ＋ G735 ＋ G715 | G705 ＋ G335 |
+| 多工效率 | 實驗室肝帝架構師 | Logitech｜MX 系列 | MX Master 4 ＋ MX Mechanical Mini | MX Anywhere 3S |
+| 靜音潛行 | 圖書館幽靈夜貓族 | Logitech｜人體工學系列 | Lift 垂直滑鼠 ＋ Wave Keys | Signature M650 ＋ Pebble Keys 2 K380s |
 
-- 每題 4 個選項，各對應 1 種屬性，選了就 +2，所以每種屬性滿分 10。
-- 隨機作答的話，4 種結果的機率**都是 25%**（1024 種組合全部跑過驗證）。
-- 同分處理：從 Q5 往回找，最後一個選到的同分屬性勝出（「掏錢包」題權重最高）。
+---
 
-## 分享機制
+## 技術實作
 
-- `#r=speed|eff|quiet|look`：朋友點進分享連結時，會先看到分享者的結果，下面有「我也要測」按鈕。
-- 限動圖：Canvas 即時產生 1080×1920 PNG，不讀外部圖片，沒有 CORS 問題。IG 內建瀏覽器無法下載時，可以長按圖片儲存。
-- 複製：先試 Clipboard API，失敗改用 `execCommand`，再失敗就跳 `prompt` 讓使用者手動複製（IG 內建瀏覽器常擋 Clipboard API）。
+- **零依賴單檔架構**：純 HTML / CSS / Vanilla JavaScript 實作於單一 `index.html`，無外部 CDN 依賴，支援手機與桌機 RWD 響應式排版。
+- **視覺與微互動**：`#0F1115` 深色底搭配雙色動態光暈（桌機跟隨游標、手機自動漂移＋觸控吸附）、毛玻璃卡片與模擬機械軸微震動回饋，並支援 `prefers-reduced-motion`。
+- **計分平衡驗證**：5 題每選項固定對應單一屬性（+2 分，滿分 10 分），窮舉 1024 種作答組合後，4 種結果出現機率均為 25%。
+
+---
+
+## 聲明
+
+此互動網頁為 Logitech 第六屆校園大使申請創意企劃作品｜Made by 胡弼勛。  
+本專案為非官方作品，文中 Logitech、Logitech G 與相關產品名稱為 Logitech 之商標，產品規格以官方公告為準。
